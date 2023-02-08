@@ -1,8 +1,8 @@
 calculatorDisplay = document.getElementById("inputDisplay");
 
-
-const num1 = 0;
-const num2 = 0;
+let displayNumber = "";
+let displayOperation = "";
+let displayNumber2 = "";
 
 const numberClick = document.querySelectorAll("button.inputNumber");
 numberClick.forEach(number => number.addEventListener("click", (printNumber)));
@@ -45,17 +45,77 @@ function multiply (x, y) {
     return product;
 }
 
-function operate (x, operator, y) {    
-    let calculation = 0;
-    calculation = operator(x,y);
-    return calculation;
-}
 
 function printNumber (e) {
+
         pressedButton = parseInt(e.target.id);
-        calculatorDisplay.textContent += pressedButton;
+
+        if (calculatorDisplay.textContent === "+" || calculatorDisplay.textContent === "-" || calculatorDisplay.textContent === "/" || calculatorDisplay.textContent === "*") {
+            calculatorDisplay.textContent = "";
+            calculatorDisplay.textContent = pressedButton;
+            displayNumber2 = calculatorDisplay.textContent;
+        } 
+        else if (displayNumber !== "" && displayOperation !== "" && displayNumber2 === "") {
+            calculatorDisplay.textContent = "";
+            calculatorDisplay.textContent = pressedButton;
+            displayNumber2 = pressedButton;
+        }
+        else if (displayOperation) {
+            calculatorDisplay.textContent += pressedButton;
+            displayNumber2 = calculatorDisplay.textContent;
+        } else {
+            calculatorDisplay.textContent += pressedButton;
+            displayNumber = calculatorDisplay.textContent;
+        }
+
+        
+        
         return pressedButton;
     }
+
+function printOperator (e) {
+
+        let calculation = 0;
+        displayNumber = parseInt(displayNumber);
+        displayNumber2 = parseInt(displayNumber2);
+
+        // These variables display the sign of the operation on the calculator;
+        pressedButton = (e.target.innerText);  
+
+        // This variable returns the string value that refers to an operation. E.g: "add" OR "divide".
+        operatorFunction = (e.target.id);    
+
+        // If the calculator has no initial number input, do not print or store a operation value
+        if (calculatorDisplay.innerText == "") {
+            return;
+        } 
+        
+        // If an operator is pressed in the condition where all inputs are already given, perform the correct operation to displayNumber1 and displayNumber2
+        // Store the value of the operation in displayNumber1, update the displayOperation to the pressed operator and set displayNumber2 to ""
+        if (displayNumber !== "" && displayOperation !== "" && displayNumber2 !== "") {
+
+            calculation = operate();
+            calculatorDisplay.textContent = calculation;
+            displayOperation = operatorFunction;
+
+            return calculation;
+        } 
+
+        if (displayNumber !== "" && displayOperation !== "" && displayNumber2 === "") {
+            
+            calculation = operate();
+            calculatorDisplay.textContent = calculation;
+            displayOperation = operatorFunction;
+
+            return calculation;
+        } 
+
+
+        
+        calculatorDisplay.innerText = pressedButton;
+        displayOperation = operatorFunction; 
+        return displayOperation;
+}
 
 // Complete Function to Backspace Chars
 function backspace (e) {
@@ -69,28 +129,68 @@ function backspace (e) {
             calculatorDisplay.textContent = delEvent;
             console.log(calculatorDisplay.textContent.length);
         }
-}
 
-function printOperator (e) {
-        operator = calculatorDisplay.innerText;
-        operatorFunction = (e.target.id);    
-        pressedButton = (e.target.innerText);  
-        if (operator == ("" || "+" || "-" || "*" || "/")) {
-            return;
+
+        if (displayOperation && displayNumber) {
+            displayNumber2 = calculatorDisplay.textContent;
+        } else {
+            displayNumber = calculatorDisplay.textContent;
         }
-        calculatorDisplay.textContent = pressedButton;
-        return operatorFunction;   
+
+        // if (displayOperation != "") {
+        //     displayOperation = "";
+        //     calculatorDisplay.textContent = displayNumber;
+        // }
+
+
+        return calculatorDisplay.textContent;
 }
 
-function clearCalculator (e) {
+
+
+function clearCalculator () {
+
     calculatorDisplay.textContent = "";
+    displayNumber = calculatorDisplay.textContent;
+    displayNumber2 = calculatorDisplay.textContent;
+    displayOperation = calculatorDisplay.textContent;
+    console.log("cleared")
     return;
 }
 
+function operate () {    
+    
+    let calculation = 0;
+    displayNumber = parseInt(displayNumber);
+    displayNumber2 = parseInt(displayNumber2);
 
+    if (displayNumber === "" || displayOperation === "" || displayNumber2 === "") {
+        return;
+    } 
+
+    if (displayOperation === "add") {
+        calculation = add(displayNumber, displayNumber2);
+    }
+
+    if (displayOperation === "subtract") {
+        calculation = subtract(displayNumber, displayNumber2);
+    }
+
+    if (displayOperation === "multiply") {
+        calculation = multiply(displayNumber, displayNumber2);
+    }
+
+    if (displayOperation === "divide") {
+        calculation = divide(displayNumber, displayNumber2);
+    }
+
+    calculatorDisplay.textContent = calculation;
+    displayNumber = calculation;
+    displayOperation = "";
+    displayNumber2 = "";
+
+    return displayNumber;
+   
+}
 // TO DO:
 
-// Use an array.reduce function for the case when a user provides a mathematical expression that does not involve an equals sign:
-// e.g: 23 + 42 - 47 -- otherwise written as:
-// 23 + 42 --> accumulates to 65
-// 65 - 47 --> accumulates to 18
