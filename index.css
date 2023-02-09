@@ -10,13 +10,13 @@
     gap: 5vh;   
     padding: 2vh;
 }
-
+ 
 .calculatorTop {
     border-width: 2px;
     border-color: black;
     border-style: solid;
 }
-
+ 
 .calculatorTop,
 .calculatorBottom {
     display: flex;
@@ -26,28 +26,19 @@
     flex: 1 1 0;
     gap: 1.5vh;
 }
-
+ 
 button {
     height: 8vh;
     width: 14vw;
     background-color: lightgrey;
+    font-size: large;
 }
-
+ 
 .row #one {
     border-color: black 1px solid;
 }
-
-/* .row #two,
-.row #three,
-.row #four,
-.row #five,
-.row #six {
-    display: flex;
-    flex: 1 1 0;
-    align-items: center;
-    justify-content: space-evenly;
-} */
-
+ 
+ 
 #inputDisplay {
     background-color: #93B557;
     display: flex;
