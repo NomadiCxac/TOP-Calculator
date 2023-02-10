@@ -6,6 +6,35 @@ let firstOperand = "";
 let mathOperation = "";
 let secondOperand = "";
  
+// Updated Feb 10, 2023: a key press event listener is set up, on the condition that the pressed key is valid.
+// Each function then had to be adjusted so that the variable that stores the input value, could recognize a keyboard event or a button click event.
+// This resulted in pressedButton = (e.key || e.target.id);
+ 
+const keyPress = document.addEventListener('keydown', (e) => {
+ 
+    // e.keyCode needs to be added, as space is recognized as a valid e.key event for some reason
+    if (e.keyCode !== 32 && (e.key <= 9 || e.key >= 0)) {
+        numberPress(e);
+    }
+ 
+    if (e.key === ".") {
+        includeDecimal(e);
+    }
+ 
+    if (e.key === "+" || e.key === "-" || e.key === "*" || e.key === "/") {
+        operatorPress(e);
+    }
+ 
+    if (e.key === "Backspace" || e.key === "Delete") {
+        backspace(e);
+    }
+ 
+    if (e.key === "Enter" || e.key === "=") {
+        operate(e);
+    }
+ 
+});
+ 
  
 const numberClick = document.querySelectorAll("button.inputNumber");
 numberClick.forEach(number => number.addEventListener("click", numberPress));
@@ -61,7 +90,7 @@ function multiply (x, y) {
 // Function for number presses
 function numberPress (e) {
  
-        pressedButton = (e.target.id);
+        pressedButton = (e.key || e.target.id);
  
         // Case 1: recognizing first operand inputs:
  
@@ -77,7 +106,6 @@ function numberPress (e) {
         // e.g.: 0 --> "5" NOT 0 --> "05"
  
         if (mathOperation === "" && firstOperand[0] === "0" && firstOperand.length === 2) {
-            console.log("True");
             calculatorDisplay.textContent = pressedButton;
             firstOperand = calculatorDisplay.textContent;
         } 
@@ -87,18 +115,17 @@ function numberPress (e) {
  
         // Condition 2a: if the user has provided a first operand value and a math operation, then we will begin storing values for the second operand and printing them on screen
         // IF we are looking for the initial number input; this is when the length of our second operand string(array) is less than 1 
-        // we will remove all previous values from the display and initialize a number from 0 - 9 | e.g. "280" -> "6" OR "+"" -> "9" | NOT "280" -> "2806" OR "+"" -> "+9" |
+        // we will remove all previous values from the display and initialize a number from 0 - 9 | e.g. "280" -> "6" OR "+" -> "9" | NOT "280" -> "2806" OR "+" -> "+9" |
         // After our initial condition, we will append numbers to the display as long as the length of our second operand string(array) is greater than 0
  
         if (firstOperand !== "" && mathOperation !== "" && secondOperand.length < 1) {
             calculatorDisplay.textContent = "";
             calculatorDisplay.textContent = pressedButton;
             secondOperand = calculatorDisplay.textContent;
-            console.log("true1");
+ 
         } else if (secondOperand.length > 0) {
             calculatorDisplay.textContent += pressedButton;
             secondOperand = calculatorDisplay.textContent;
-            console.log("true2");
         }
  
         // Condition 2b: see condition 1b)
@@ -115,16 +142,13 @@ function numberPress (e) {
 // Functon for operator presses
 function operatorPress (e) {
  
-        // This would be: "+", "-", "*", "/"
+        // This would be: "+", "-", "*", "/" 
+        // Note: e.key must be evaluated before e.target.textContent as it will read the value as a numpad as opposed to the object provided by the event
+        pressedButton = (e.key || e.target.textContent); 
  
-        pressedButton = (e.target.innerText);  
  
-        // This would be: "add", "subtract", "*" "divide"
+        // If the calculator has no initial number input, do not print or store an operation value
  
-        operatorFunction = (e.target.id);    
- 
-        // If the calculator has no initial number input, do not print or store a operation value
-        
         if (calculatorDisplay.innerText == "") {
             operatorFunction = "";
             return;
@@ -135,26 +159,27 @@ function operatorPress (e) {
         
         if (firstOperand !== "" && mathOperation !== "" && secondOperand === "") {
             calculatorDisplay.innerText = pressedButton;
-            mathOperation = operatorFunction; 
+            mathOperation = pressedButton; 
         }
         
         // Condition 2: IF user decides to click a mathematical operator after all input variables are given, carry out the mathematical operation
-        // in this case: the result of mathOperation(firstOperand, secondOperand) "a.k.a operate()" will get stored in the firstOperand variable, while the operatorPress event
-        // will store the newly pressed math operation in the mathOperation variable. The second operation will be cleared to "" and pending input from the user.
+        // in this case: the result of mathOperation(firstOperand, secondOperand) "a.k.a operate()" will get stored in the firstOperand variable, 
+        // while the operatorPress event stores the newly pressed math operation in the mathOperation variable. 
+        // The second operation will be cleared to "" and pending input from the user.
  
         if (firstOperand !== "" && mathOperation !== "" && secondOperand !== "") {
             
             console.log(firstOperand, mathOperation, secondOperand);
             calculation = operate();
             calculatorDisplay.textContent = calculation;
-            mathOperation = operatorFunction;
+            mathOperation = pressedButton; 
         } 
  
         // Condition 3: IF the mathOperation value is empty, store a new math operation value
  
         if (mathOperation === "") {
             calculatorDisplay.innerText = pressedButton;
-            mathOperation = operatorFunction; 
+            mathOperation = pressedButton; 
         }
  
  
@@ -163,7 +188,7 @@ function operatorPress (e) {
 //Function to Backspace Chars
 function backspace (e) {
  
-        delButton = e.target.id;
+        delButton = (e.key || e.target.id);
         currentDisplay = calculatorDisplay.textContent;
  
         // The delete event is represented by taking the current display string(array) (or operand 1 || operand 2), identifying the outer most array value
@@ -186,8 +211,7 @@ function backspace (e) {
  
 function includeDecimal (e) {
  
-    pressedButton = (e.target.id);
-    console.log(pressedButton);
+    pressedButton = (e.key || e.target.id);
  
     // All conditions check to see if the first/second operand already contains a decimal value. If a decimal already exists, do nothing.
     // the indexOf logic can be factored out in a while loop for the cases that pertain to either operand. 
@@ -195,7 +219,7 @@ function includeDecimal (e) {
  
     // Condition 1: Calculator's first button input is a decimal and will apply to the first operand
  
-    if (firstOperand.indexOf(".") !== -1 && firstOperand === "" && mathOperation === "" && secondOperand === "") {
+    if (firstOperand.indexOf(".") === -1 && firstOperand === "" && mathOperation === "" && secondOperand === "") {
         calculatorDisplay.textContent = "0.";
         firstOperand = "0.";
     }
@@ -238,6 +262,7 @@ function clearCalculator () {
 }
  
 // Operate function to evaluate mathematical operations. Executes only after the "=" button is pressed OR a mathematical operation is chosen instead
+// Update Feb 10, 2023: mathOperation now must be equivalent to the "operator signs" to reduce the amount of variables that need to be considered.
  
 function operate () {    
     
@@ -251,28 +276,28 @@ function operate () {
     } 
  
     // calls fn "add"
-    if (mathOperation === "add") {
+    if (mathOperation === "+") {
         firstOperand = parseFloat(firstOperand);
         secondOperand = parseFloat(secondOperand);
         calculation = add(firstOperand, secondOperand);
     }
  
     // calls fn "subtract"
-    if (mathOperation === "subtract") {
+    if (mathOperation === "-") {
         firstOperand = parseFloat(firstOperand);
         secondOperand = parseFloat(secondOperand);
         calculation = subtract(firstOperand, secondOperand);
     }
  
     // calls fn "multiply"
-    if (mathOperation === "multiply") {
+    if (mathOperation === "*") {
         firstOperand = parseFloat(firstOperand);
         secondOperand = parseFloat(secondOperand);
         calculation = multiply(firstOperand, secondOperand);
     }
  
     // calls fn "divide"
-    if (mathOperation === "divide") {
+    if (mathOperation === "/") {
         firstOperand = parseFloat(firstOperand);
         secondOperand = parseFloat(secondOperand);
         calculation = divide(firstOperand, secondOperand);
