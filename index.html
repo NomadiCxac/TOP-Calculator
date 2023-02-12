@@ -1,5 +1,5 @@
 <!DOCTYPE html>
- 
+
 <html>
     <head>
         <meta charset="utf-8">
@@ -9,48 +9,57 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="index.css">
     </head>
+
     <body>
-        <div class="calculatorBody">
-            <div class="calculatorTop">
-                <div class="row" id="one">
-                    <div id="inputDisplay"></div>
-                </div>
-            </div>  
-        
-            <div class="calculatorBottom">
-                <div class="row" id="two">
-                    <button class="inputNumber" id="7">7</button>
-                    <button class="inputNumber" id="8">8</button>
-                    <button class="inputNumber" id="9">9</button>
-                </div>
- 
-                <div class="row" id="three">
-                    <button class="inputNumber" id="4">4</button>
-                    <button class="inputNumber" id="5">5</button>
-                    <button class="inputNumber" id="6">6</button>
-                </div>
- 
-                <div class="row" id="four">
-                    <button class="inputNumber" id="1">1</button>
-                    <button class="inputNumber" id="2">2</button>
-                    <button class="inputNumber" id="3">3</button>
-                    <button class="decimal" id="decimal" >.</button>
-                </div>
- 
-                <div class="row" id="five">
-                    <button class="inputNumber" id="0">0</button>
-                    <button class="equals" id="equals">=</button>
-                    <button class="clear" id="clear">AC</button>
-                    <button class="backspace" id="backspace">DEL</button>
-                </div>
- 
-                <div class="row" id="six">
-                    <button class="inputOperation" id="add">+</button>  
-                    <button class="inputOperation" id="divide">/</button>
-                    <button class="inputOperation" id="multiply">*</button>
-                    <button class="inputOperation" id="subtract">-</button>  
-                </div>
+        <div class = "background">
+
+            <div class="calculatorBody">
+
+                <div class="calculatorTop">
+                    <div class="row" id="one">
+                        <div id="inputDisplay"></div>
+                    </div>
+                </div>  
+            
+                <!-- added an onclick function "this.bluer();" to ensure that the button click does not maintain focus on the selected button after a keyboard event is pressed -->
+                    <div class="calculatorBottom">
+
+                        <div class="row" id="two">
+                            <button class="clear" id="clear" onclick = "this.blur()">AC</button>
+                            <button class="backspace" id="backspace" onclick = "this.blur()">DEL</button>
+                        </div>
+
+                        <div class="row" id="three">
+                            <button class="inputNumber" id="7" onclick = "this.blur()">7</button>
+                            <button class="inputNumber" id="8" onclick = "this.blur()">8</button>
+                            <button class="inputNumber" id="9" onclick = "this.blur()">9</button>
+                            <button class="inputOperation" id="add" onclick = "this.blur()">+</button>  
+                        </div>
+
+                        <div class="row" id="four">
+                            <button class="inputNumber" id="4" onclick = "this.blur()">4</button>
+                            <button class="inputNumber" id="5" onclick = "this.blur()">5</button>
+                            <button class="inputNumber" id="6" onclick = "this.blur()">6</button>
+                            <button class="inputOperation" id="divide" onclick = "this.blur()">/</button>
+                        </div>
+
+                        <div class="row" id="five">
+                            <button class="inputNumber" id="1" onclick = "this.blur()">1</button>
+                            <button class="inputNumber" id="2" onclick = "this.blur()">2</button>
+                            <button class="inputNumber" id="3" onclick = "this.blur()">3</button>
+                            <button class="inputOperation" id="multiply" onclick = "this.blur()">*</button>
+                        </div>
+
+                        <div class="row" id="six">
+                            <button class="inputNumber" id="0" onclick = "this.blur()">0</button>
+                            <button class="decimal" id="decimal" onclick = "this.blur()">.</button>
+                            <button class="equals" id="equals" onclick = "this.blur()">=</button>
+                            <button class="inputOperation" id="subtract" onclick = "this.blur()">-</button>                      
+                        </div>
+                    </div>
+        <!--End Calculator Body  -->
             </div>
+<!--End Background  -->
         </div>
         
         <script src="functions/function.js" defer></script>
